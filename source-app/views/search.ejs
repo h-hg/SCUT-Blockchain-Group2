@@ -28,7 +28,7 @@
 			<th>投件人</th>
 			<th>投件人所在地</th>
 		</tr>
-		<tr>
+		<tr ng-repeat="query in query_source">
 			<td>{{query_source.CoName}}</td>
 			<td>{{query_source.CoInfo}}</td>
 			<td>{{query_source.DeliverTime}}</td>
