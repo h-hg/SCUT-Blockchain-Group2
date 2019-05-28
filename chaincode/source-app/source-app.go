@@ -16,14 +16,14 @@ type ExpressChainCode struct{
 type ExpressInfo struct{
     ExpressID string `json:ExpressID`                             //食品ID
     ExpressProInfo ProInfo `json:ExpressProInfo`                  //生产信息
-    ExpressIngInfo []IngInfo `json:ExpressIngInfo`                  //配料信息
+    //ExpressIngInfo []IngInfo `json:ExpressIngInfo`                  //配料信息
     ExpressLogInfo LogInfo `json:ExpressLogInfo`                  //物流信息
 }
 
 type ExpressAllInfo struct{
     ExpressID string `json:ExpressId`
     ExpressProInfo ProInfo `json:ExpressProInfo`
-    ExpressIngInfo []IngInfo `json:ExpressIngInfo`
+    //ExpressIngInfo []IngInfo `json:ExpressIngInfo`
     ExpressLogInfo []LogInfo `json:ExpressLogInfo`
 }
 
@@ -39,10 +39,10 @@ type ProInfo struct{
     Deliverer string `json:Deliverer`                 //食品生产价格
     DelivererAdd string `json:DelivererAdd`                 //食品生产所在地
 }
-type IngInfo struct{
+/* type IngInfo struct{
     IngID string `json:IngID`                               //配料ID
     IngName string `json:IngName`                           //配料名称
-}
+} */
 
 type LogInfo struct{
     ArrTime string `json:ArrTime`             //出发时间
@@ -65,9 +65,7 @@ func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
     fn,args := stub.GetFunctionAndParameters()
     if fn == "addProInfo"{
         return a.addProInfo(stub,args)
-    } else if fn == "addIngInfo"{
-        return a.addIngInfo(stub,args)
-    } else if fn == "getExpressInfo"{
+    }else if fn == "getExpressInfo"{
         return a.getExpressInfo(stub,args)
     }else if fn == "addLogInfo"{
         return a.addLogInfo(stub,args)
@@ -75,8 +73,6 @@ func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
         return a.getProInfo(stub,args)
     }else if fn == "getLogInfo"{
         return a.getLogInfo(stub,args)
-    }else if fn == "getIngInfo"{
-        return a.getIngInfo(stub,args)
     }else if fn == "getLogInfo_l"{
         return a.getLogInfo_l(stub,args)
     }
@@ -119,7 +115,7 @@ func (a *ExpressChainCode) addProInfo(stub shim.ChaincodeStubInterface, args []s
     return shim.Success(nil)
 }
 
-func(a *ExpressChainCode) addIngInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
+/* func(a *ExpressChainCode) addIngInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
         
     var ExpressInfos ExpressInfo
     var IngInfoitem IngInfo
@@ -138,7 +134,7 @@ func(a *ExpressChainCode) addIngInfo (stub shim.ChaincodeStubInterface,args []st
     
     
     ExpressInfos.ExpressID = ExpressID
-  /*  ExpressInfos.ExpressIngInfo = expressIngInfo*/
+    //ExpressInfos.ExpressIngInfo = expressIngInfo
     IngInfoJsonAsBytes,err := json.Marshal(ExpressInfos)
     if err != nil {
     return shim.Error(err.Error())
@@ -150,7 +146,7 @@ func(a *ExpressChainCode) addIngInfo (stub shim.ChaincodeStubInterface,args []st
     }
     return shim.Success(nil)
         
-}
+} */
 
 func(a *ExpressChainCode) addLogInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
  
@@ -210,8 +206,6 @@ func(a *ExpressChainCode) getExpressInfo (stub shim.ChaincodeStubInterface,args 
         json.Unmarshal(response.Value,&ExpressInfos)
         if ExpressInfos.ExpressProInfo.CoName !=""{
             expressAllinfo.ExpressProInfo = ExpressInfos.ExpressProInfo
-        }else if ExpressInfos.ExpressIngInfo != nil{
-            expressAllinfo.ExpressIngInfo = ExpressInfos.ExpressIngInfo
         }else if ExpressInfos.ExpressLogInfo.HandlerInfo !=""{
             expressAllinfo.ExpressLogInfo = append(expressAllinfo.ExpressLogInfo,ExpressInfos.ExpressLogInfo)
         }
@@ -260,7 +254,7 @@ func(a *ExpressChainCode) getProInfo (stub shim.ChaincodeStubInterface,args []st
     return shim.Success(jsonsAsBytes)
 }
 
-func(a *ExpressChainCode) getIngInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
+/* func(a *ExpressChainCode) getIngInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
  
     if len(args) !=1{
         return shim.Error("Incorrect number of arguments.")
@@ -291,7 +285,7 @@ func(a *ExpressChainCode) getIngInfo (stub shim.ChaincodeStubInterface,args []st
         return shim.Error(err.Error())
     }
     return shim.Success(jsonsAsBytes)
-}
+} */
 
 func(a *ExpressChainCode) getLogInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
 

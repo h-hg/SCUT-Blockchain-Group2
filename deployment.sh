@@ -14,9 +14,9 @@ cd ./basic-network
 chmod a+x ./start.sh
 cd ../source-app
 chmod a+x ./startFabric.sh
-./startFabric.sh
 # 安装包
 npm install
+./startFabric.sh
 # 更改端口
 node registerAdmin.js
 node registerUser.js
