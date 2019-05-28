@@ -7,17 +7,11 @@ module.exports = function(app) {
 	app.get('/search', function(req, res) {
 		tuna.search_html(req, res);
 	});
-	app.get('/part_search', function(req, res) {
-		tuna.part_search(req, res);
-	});
 	app.get('/business_search', function(req, res) {
 		tuna.business_search(req, res);
 	});
 	app.get('/form', function(req, res) {
 		tuna.form_(req, res);
-	});
-	app.get('/part_form', function(req, res) {
-		tuna.part_form(req, res);
 	});
 	app.get('/transit_form', function(req, res) {
 		tuna.transit_form(req, res);
