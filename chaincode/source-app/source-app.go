@@ -19,11 +19,6 @@ type ExpressInfo struct{
     ExpressLogInfo LogInfo `json:ExpressLogInfo`                  //物流信息
 }
 
-type ExpressAllInfo struct{
-    ExpressID string `json:ExpressId`
-    ExpressProInfo ProInfo `json:ExpressProInfo`
-    ExpressLogInfo []LogInfo `json:ExpressLogInfo`
-}
 
 //快递信息
 type ProInfo struct{
@@ -60,16 +55,12 @@ func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
     fn,args := stub.GetFunctionAndParameters()
     if fn == "addProInfo"{
         return a.addProInfo(stub,args)
-    }else if fn == "getExpressInfo"{
-        return a.getExpressInfo(stub,args)
     }else if fn == "addLogInfo"{
         return a.addLogInfo(stub,args)
     }else if fn == "getProInfo"{
         return a.getProInfo(stub,args)
     }else if fn == "getLogInfo"{
         return a.getLogInfo(stub,args)
-    }else if fn == "getLogInfo_l"{
-        return a.getLogInfo_l(stub,args)
     }
 
     return shim.Error("Recevied unkown function invocation")
@@ -147,42 +138,6 @@ func(a *ExpressChainCode) addLogInfo (stub shim.ChaincodeStubInterface,args []st
 
 
 
-func(a *ExpressChainCode) getExpressInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
-    if len(args) != 1{
-        return shim.Error("Incorrect number of arguments.")
-    }
-    ExpressID := args[0]
-    resultsIterator,err := stub.GetHistoryForKey(ExpressID)
-    if err != nil {
-        return shim.Error(err.Error())
-    }
-    defer resultsIterator.Close()
-    
-    var expressAllinfo ExpressAllInfo
-
-    for resultsIterator.HasNext(){
-        var ExpressInfos ExpressInfo
-        response,err :=resultsIterator.Next()
-        if err != nil {
-             return shim.Error(err.Error())
-        }
-        json.Unmarshal(response.Value,&ExpressInfos)
-        if ExpressInfos.ExpressProInfo.CoName !=""{
-            expressAllinfo.ExpressProInfo = ExpressInfos.ExpressProInfo
-        }else if ExpressInfos.ExpressLogInfo.HandlerInfo !=""{
-            expressAllinfo.ExpressLogInfo = append(expressAllinfo.ExpressLogInfo,ExpressInfos.ExpressLogInfo)
-        }
-
-    }
-    
-    jsonsAsBytes,err := json.Marshal(expressAllinfo)
-    if err != nil{
-        return shim.Error(err.Error())
-    }
-
-    return shim.Success(jsonsAsBytes)
-}
- 
 
 func(a *ExpressChainCode) getProInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
     
@@ -251,41 +206,6 @@ func(a *ExpressChainCode) getLogInfo (stub shim.ChaincodeStubInterface,args []st
     }
     return shim.Success(jsonsAsBytes)
 }
-
-func(a *ExpressChainCode) getLogInfo_l(stub shim.ChaincodeStubInterface,args []string) pb.Response{
-    var Loginfo LogInfo
-
-    if len(args) != 1{
-        return shim.Error("Incorrect number of arguments.")
-    }
-
-    ExpressID := args[0]
-    resultsIterator,err :=stub.GetHistoryForKey(ExpressID)
-    if err != nil{
-        return shim.Error(err.Error())
-    }
-    defer resultsIterator.Close()
-
-   
-    for resultsIterator.HasNext(){
-        var ExpressInfos ExpressInfo
-        response,err := resultsIterator.Next()
-        if err != nil {
-            return shim.Error(err.Error())
-        }
-        json.Unmarshal(response.Value,&ExpressInfos)
-        if ExpressInfos.ExpressLogInfo.HandlerInfo != ""{
-           Loginfo = ExpressInfos.ExpressLogInfo
-           continue 
-       }
-    }
-    jsonsAsBytes,err := json.Marshal(Loginfo)
-    if err != nil{
-        return shim.Error(err.Error ())
-    }
-    return shim.Success(jsonsAsBytes)
-}
-
 
 func main(){
      err := shim.Start(new(ExpressChainCode))
