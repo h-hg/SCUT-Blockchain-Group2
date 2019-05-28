@@ -13,6 +13,7 @@
 <body ng-app="application" ng-controller="appController">
 	<div class="form-wrapper">
 		<input type="text" id="search" placeholder="快递编号..." ng-model="query_id" required>
+		<input type="button" class="submitButton" style="margin-left: 2%" value="返回" onclick="javascrtpt:window.location.href='/index'">
 		<input type="submit" value="搜索" id="submit" ng-click="queryTransit()">
 	</div>
 	<table cellspacing="0" id="transit_source">

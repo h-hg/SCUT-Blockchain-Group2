@@ -5,7 +5,7 @@ body {
 }
 
 .form-wrapper {
-    width: 450px;
+    width: 570px;
     padding: 8px;
     margin: 200px auto;
     overflow: hidden;
@@ -92,4 +92,25 @@ body {
   
 .form-wrapper #submit::-moz-focus-inner {
     border: 0;
+}
+
+.submitButton {
+    float: right;    
+    border: 1px solid #00748f;
+    height: 42px;
+    width: 100px;
+    padding: 0;
+    cursor: pointer;
+    font: bold 15px Arial, Helvetica;
+    color: #fafafa;
+    text-transform: uppercase;    
+    background-color: 	rgb(182, 189, 122);
+    background-image: linear-gradient(top, #31b2c3, 	#32CD32);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;      
+    text-shadow: 0 1px 0 rgba(0, 0 ,0, .3);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
+	-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
+	-moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;  
 }
