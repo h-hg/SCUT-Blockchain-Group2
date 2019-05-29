@@ -82,32 +82,36 @@ func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 //添加快递信息
 func (a *ExpressChainCode) addExpressInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
     var err error 
-    var ExpressInfos InfoAll
+    //var ExpressInfos InfoAll
+    var ExpressInfos ExpressInfo
 
     if len(args)!=10{
         return shim.Error("Incorrect number of arguments.")
     }
-    ExpressInfos.ExpressID = args[0]
-    if ExpressInfos.ExpressID == ""{
+    //ExpressInfos.ExpressID = args[0]
+    ExpressID := args[0]
+    //if ExpressInfos.ExpressID == ""{
+    if ExpressID == ""{
         return shim.Error("ExpressID can not be empty.")
     }
     
     
-    ExpressInfos.ExpressProInfo.CoName = args[1]
-    ExpressInfos.ExpressProInfo.CoInfo = args[2]
-    ExpressInfos.ExpressProInfo.DeliverTime = args[3]
-    ExpressInfos.ExpressProInfo.EstimatedDeliveryTime = args[4]
-    ExpressInfos.ExpressProInfo.BatchNum = args[5]
-    ExpressInfos.ExpressProInfo.Weight = args[6]
-    ExpressInfos.ExpressProInfo.Price = args[7]
-    ExpressInfos.ExpressProInfo.Deliverer = args[8]
-    ExpressInfos.ExpressProInfo.DelivererAdd = args[9]
+    ExpressInfos.CoName = args[1]
+    ExpressInfos.CoInfo = args[2]
+    ExpressInfos.DeliverTime = args[3]
+    ExpressInfos.EstimatedDeliveryTime = args[4]
+    ExpressInfos.BatchNum = args[5]
+    ExpressInfos.Weight = args[6]
+    ExpressInfos.Price = args[7]
+    ExpressInfos.Deliverer = args[8]
+    ExpressInfos.DelivererAdd = args[9]
     ProInfosJSONasBytes,err := json.Marshal(ExpressInfos)//将快递信息转为JSON格式
     if err != nil{
         return shim.Error(err.Error())
     }
 
-    err = stub.PutState(ExpressInfos.ExpressID,ProInfosJSONasBytes)
+    //err = stub.PutState(ExpressInfos.ExpressID,ProInfosJSONasBytes)
+    err = stub.PutState(ExpressID,ProInfosJSONasBytes)
     if err != nil{
         return shim.Error(err.Error())
     }
@@ -116,34 +120,38 @@ func (a *ExpressChainCode) addExpressInfo(stub shim.ChaincodeStubInterface, args
 }
 
 //添加中转信息
-func(a *ExpressChainCode) addTransferInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
+func(a *ExpressChainCode) addTransferInfo(stub shim.ChaincodeStubInterface,args []string) pb.Response{
  
     var err error
-    var ExpressInfos InfoAll
+    //var ExpressInfos InfoAll
+    var ExpressInfos TransferInfo
 
     if len(args)!=11{
         return shim.Error("Incorrect number of arguments.")
     }
-    ExpressInfos.ExpressID = args[0]
-    if ExpressInfos.ExpressID == ""{
+    //ExpressInfos.ExpressID = args[0]
+    ExpressID = args[0]
+    //if ExpressInfos.ExpressID == ""{
+    if ExpressID == ""{
         return shim.Error("ExpressID can not be empty.")
     }
-    ExpressInfos.ExpressLogInfo.ArrTime = args[1]
-    ExpressInfos.ExpressLogInfo.TranferStationAdd = args[2]
-    ExpressInfos.ExpressLogInfo.HandlerInfo = args[3]
-    ExpressInfos.ExpressLogInfo.PkgStatus = args[4]
-    ExpressInfos.ExpressLogInfo.DepartureTime = args[5]
-    ExpressInfos.ExpressLogInfo.NextDestAdd = args[6]
-    ExpressInfos.ExpressLogInfo.Mission = args[7]
-    ExpressInfos.ExpressLogInfo.VehicleType = args[8]
-    ExpressInfos.ExpressLogInfo.VehicleInfo = args[9]
-    ExpressInfos.ExpressLogInfo.DriverInfo = args[10]
+    ExpressInfos.ArrTime = args[1]
+    ExpressInfos.TranferStationAdd = args[2]
+    ExpressInfos.HandlerInfo = args[3]
+    ExpressInfos.PkgStatus = args[4]
+    ExpressInfos.DepartureTime = args[5]
+    ExpressInfos.NextDestAdd = args[6]
+    ExpressInfos.Mission = args[7]
+    ExpressInfos.VehicleType = args[8]
+    ExpressInfos.VehicleInfo = args[9]
+    ExpressInfos.DriverInfo = args[10]
     
     LogInfosJSONasBytes,err := json.Marshal(ExpressInfos)
     if err != nil{
         return shim.Error(err.Error())
     } 
-    err = stub.PutState(ExpressInfos.ExpressID,LogInfosJSONasBytes)
+    //err = stub.PutState(ExpressInfos.ExpressID,LogInfosJSONasBytes)
+    err = stub.PutState(ExpressID,LogInfosJSONasBytes)
     if err != nil{
         return shim.Error(err.Error())
     }
@@ -168,16 +176,19 @@ func(a *ExpressChainCode) getExpressInfo(stub shim.ChaincodeStubInterface,args [
     var expressProInfo ExpressInfo
 
     for resultsIterator.HasNext(){
-        var ExpressInfos InfoAll
+        //var ExpressInfos InfoAll
+        var ExpressInfos ExpressInfo
         response,err :=resultsIterator.Next()
         if err != nil {
             return shim.Error(err.Error())
         }
         json.Unmarshal(response.Value,&ExpressInfos)
-        if ExpressInfos.ExpressProInfo.CoName != ""{
+/*         if ExpressInfos.ExpressProInfo.CoName != ""{
             expressProInfo = ExpressInfos.ExpressProInfo
             continue
-        }
+        } */
+        expressProInfo = ExpressInfos
+
     }
     jsonsAsBytes,err := json.Marshal(expressProInfo)   
     if err != nil {
@@ -204,14 +215,17 @@ func(a *ExpressChainCode) getTransferInfo(stub shim.ChaincodeStubInterface,args 
 
    
     for resultsIterator.HasNext(){
-        var ExpressInfos InfoAll
+        //var ExpressInfos InfoAll
+        var ExpressInfos TransferInfo
         response,err := resultsIterator.Next()
         if err != nil {
             return shim.Error(err.Error())
         }
         json.Unmarshal(response.Value,&ExpressInfos)
-        if ExpressInfos.ExpressLogInfo.HandlerInfo != ""{
-            LogInfos = append(LogInfos,ExpressInfos.ExpressLogInfo)
+        //if ExpressInfos.ExpressLogInfo.HandlerInfo != ""{
+        if ExpressInfos.HandlerInfo != ""{
+            //LogInfos = append(LogInfos,ExpressInfos.ExpressLogInfo)
+            LogInfos = append(LogInfos,ExpressInfos)
         }
     }
     jsonsAsBytes,err := json.Marshal(LogInfos)
