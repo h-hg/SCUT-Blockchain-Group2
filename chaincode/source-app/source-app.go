@@ -26,14 +26,6 @@ Function annotation:
 type ExpressChainCode struct{
 }
 
-//快递
-type InfoAll struct{
-    ExpressID string `json:ExpressID`                             //快递ID
-    ExpressProInfo ExpressInfo `json:ExpressProInfo`                  //快递信息
-    ExpressLogInfo TransferInfo `json:ExpressLogInfo`                  //中转信息
-}
-
-
 //快递信息
 type ExpressInfo struct{
     CoName string `json:CoName`                              //物流公司名称
@@ -82,15 +74,12 @@ func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 //添加快递信息
 func (a *ExpressChainCode) addExpressInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
     var err error 
-    //var ExpressInfos InfoAll
     var ExpressInfos ExpressInfo
 
     if len(args)!=10{
         return shim.Error("Incorrect number of arguments.")
     }
-    //ExpressInfos.ExpressID = args[0]
     ExpressID := args[0]
-    //if ExpressInfos.ExpressID == ""{
     if ExpressID == ""{
         return shim.Error("ExpressID can not be empty.")
     }
@@ -110,7 +99,6 @@ func (a *ExpressChainCode) addExpressInfo(stub shim.ChaincodeStubInterface, args
         return shim.Error(err.Error())
     }
 
-    //err = stub.PutState(ExpressInfos.ExpressID,ProInfosJSONasBytes)
     err = stub.PutState(ExpressID,ProInfosJSONasBytes)
     if err != nil{
         return shim.Error(err.Error())
@@ -123,15 +111,12 @@ func (a *ExpressChainCode) addExpressInfo(stub shim.ChaincodeStubInterface, args
 func(a *ExpressChainCode) addTransferInfo(stub shim.ChaincodeStubInterface,args []string) pb.Response{
  
     var err error
-    //var ExpressInfos InfoAll
     var ExpressInfos TransferInfo
 
     if len(args)!=11{
         return shim.Error("Incorrect number of arguments.")
     }
-    //ExpressInfos.ExpressID = args[0]
-    ExpressID = args[0]
-    //if ExpressInfos.ExpressID == ""{
+    ExpressID := args[0]
     if ExpressID == ""{
         return shim.Error("ExpressID can not be empty.")
     }
@@ -150,15 +135,12 @@ func(a *ExpressChainCode) addTransferInfo(stub shim.ChaincodeStubInterface,args 
     if err != nil{
         return shim.Error(err.Error())
     } 
-    //err = stub.PutState(ExpressInfos.ExpressID,LogInfosJSONasBytes)
     err = stub.PutState(ExpressID,LogInfosJSONasBytes)
     if err != nil{
         return shim.Error(err.Error())
     }
     return shim.Success(nil)
 }
-
-
 
 //获取快递信息
 func(a *ExpressChainCode) getExpressInfo(stub shim.ChaincodeStubInterface,args []string) pb.Response{
@@ -176,19 +158,16 @@ func(a *ExpressChainCode) getExpressInfo(stub shim.ChaincodeStubInterface,args [
     var expressProInfo ExpressInfo
 
     for resultsIterator.HasNext(){
-        //var ExpressInfos InfoAll
         var ExpressInfos ExpressInfo
         response,err :=resultsIterator.Next()
         if err != nil {
             return shim.Error(err.Error())
         }
         json.Unmarshal(response.Value,&ExpressInfos)
-/*         if ExpressInfos.ExpressProInfo.CoName != ""{
-            expressProInfo = ExpressInfos.ExpressProInfo
+        if ExpressInfos.CoName != ""{
+            expressProInfo = ExpressInfos
             continue
-        } */
-        expressProInfo = ExpressInfos
-
+        }
     }
     jsonsAsBytes,err := json.Marshal(expressProInfo)   
     if err != nil {
@@ -215,16 +194,13 @@ func(a *ExpressChainCode) getTransferInfo(stub shim.ChaincodeStubInterface,args 
 
    
     for resultsIterator.HasNext(){
-        //var ExpressInfos InfoAll
         var ExpressInfos TransferInfo
         response,err := resultsIterator.Next()
         if err != nil {
             return shim.Error(err.Error())
         }
         json.Unmarshal(response.Value,&ExpressInfos)
-        //if ExpressInfos.ExpressLogInfo.HandlerInfo != ""{
         if ExpressInfos.HandlerInfo != ""{
-            //LogInfos = append(LogInfos,ExpressInfos.ExpressLogInfo)
             LogInfos = append(LogInfos,ExpressInfos)
         }
     }
