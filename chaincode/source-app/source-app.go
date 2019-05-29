@@ -27,15 +27,15 @@ type ExpressChainCode struct{
 }
 
 //快递
-type ExpressInfo struct{
+type InfoAll struct{
     ExpressID string `json:ExpressID`                             //快递ID
-    ExpressProInfo ProInfo `json:ExpressProInfo`                  //快递信息
-    ExpressLogInfo LogInfo `json:ExpressLogInfo`                  //中转信息
+    ExpressProInfo ExpressInfo `json:ExpressProInfo`                  //快递信息
+    ExpressLogInfo TransferInfo `json:ExpressLogInfo`                  //中转信息
 }
 
 
 //快递信息
-type ProInfo struct{
+type ExpressInfo struct{
     CoName string `json:CoName`                              //物流公司名称
     CoInfo string `json:CoInfo`                              //物流公司信息
     DeliverTime string `json:DeliverTime`                    //发件日期
@@ -48,7 +48,7 @@ type ProInfo struct{
 }
 
 //中转信息
-type LogInfo struct{
+type TransferInfo struct{
     ArrTime string `json:ArrTime`                       //到达时间
     TranferStationAdd string `json:TranferStationAdd`   //中转站地址
     HandlerInfo string `json:HandlerInfo`               //处理人员信息
@@ -67,22 +67,22 @@ func (a *ExpressChainCode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 //提供给外部的调用
 func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
     fn,args := stub.GetFunctionAndParameters()
-    if fn == "addProInfo"{
-        return a.addProInfo(stub,args)
-    }else if fn == "addLogInfo"{
-        return a.addLogInfo(stub,args)
-    }else if fn == "getProInfo"{
-        return a.getProInfo(stub,args)
-    }else if fn == "getLogInfo"{
-        return a.getLogInfo(stub,args)
+    if fn == "addExpressInfo"{
+        return a.addExpressInfo(stub,args)
+    }else if fn == "addTransferInfo"{
+        return a.addTransferInfo(stub,args)
+    }else if fn == "getExpressInfo"{
+        return a.getExpressInfo(stub,args)
+    }else if fn == "getTransferInfo"{
+        return a.getTransferInfo(stub,args)
     }
 
     return shim.Error("Recevied unkown function invocation")
 }
 //添加快递信息
-func (a *ExpressChainCode) addProInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (a *ExpressChainCode) addExpressInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
     var err error 
-    var ExpressInfos ExpressInfo
+    var ExpressInfos InfoAll
 
     if len(args)!=10{
         return shim.Error("Incorrect number of arguments.")
@@ -116,10 +116,10 @@ func (a *ExpressChainCode) addProInfo(stub shim.ChaincodeStubInterface, args []s
 }
 
 //添加中转信息
-func(a *ExpressChainCode) addLogInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
+func(a *ExpressChainCode) addTransferInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
  
     var err error
-    var ExpressInfos ExpressInfo
+    var ExpressInfos InfoAll
 
     if len(args)!=11{
         return shim.Error("Incorrect number of arguments.")
@@ -153,7 +153,7 @@ func(a *ExpressChainCode) addLogInfo (stub shim.ChaincodeStubInterface,args []st
 
 
 //获取快递信息
-func(a *ExpressChainCode) getProInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
+func(a *ExpressChainCode) getExpressInfo(stub shim.ChaincodeStubInterface,args []string) pb.Response{
     
     if len(args) != 1{
         return shim.Error("Incorrect number of arguments.")
@@ -165,10 +165,10 @@ func(a *ExpressChainCode) getProInfo (stub shim.ChaincodeStubInterface,args []st
     }
     defer resultsIterator.Close()
     
-    var expressProInfo ProInfo
+    var expressProInfo ExpressInfo
 
     for resultsIterator.HasNext(){
-        var ExpressInfos ExpressInfo
+        var ExpressInfos InfoAll
         response,err :=resultsIterator.Next()
         if err != nil {
             return shim.Error(err.Error())
@@ -187,9 +187,9 @@ func(a *ExpressChainCode) getProInfo (stub shim.ChaincodeStubInterface,args []st
 }
 
 //获取中转信息
-func(a *ExpressChainCode) getLogInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
+func(a *ExpressChainCode) getTransferInfo(stub shim.ChaincodeStubInterface,args []string) pb.Response{
 
-    var LogInfos []LogInfo
+    var LogInfos []TransferInfo
 
     if len(args) != 1{
         return shim.Error("Incorrect number of arguments.")
@@ -204,7 +204,7 @@ func(a *ExpressChainCode) getLogInfo (stub shim.ChaincodeStubInterface,args []st
 
    
     for resultsIterator.HasNext(){
-        var ExpressInfos ExpressInfo
+        var ExpressInfos InfoAll
         response,err := resultsIterator.Next()
         if err != nil {
             return shim.Error(err.Error())
