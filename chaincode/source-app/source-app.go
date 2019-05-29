@@ -79,7 +79,7 @@ func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 
     return shim.Error("Recevied unkown function invocation")
 }
-
+//添加快递信息
 func (a *ExpressChainCode) addProInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
     var err error 
     var ExpressInfos ExpressInfo
