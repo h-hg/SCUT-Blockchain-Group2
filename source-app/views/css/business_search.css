@@ -4,7 +4,7 @@ body {
 	margin: auto;
 }
 
-.busiform-wrapper {
+.form-wrapper {
     width: 570px;
     padding: 8px;
     margin: 200px auto;
@@ -18,7 +18,7 @@ body {
     background-image: linear-gradient(top, #f6f6f6, #eae8e8);
 }
 
-.busiform-wrapper #busisearch {
+.form-wrapper #search {
     width: 330px;
     height: 22px;
     padding: 10px 5px;
@@ -29,28 +29,28 @@ body {
     border-radius: 3px;      
 }
 
-.busiform-wrapper #busisearch:focus {
+.form-wrapper #search:focus {
     outline: 0; 
     border-color: #aaa;
     box-shadow: 0 1px 1px #bbb inset;  
 }
 
-.busiform-wrapper #busisearch::-webkit-input-placeholder {
+.form-wrapper #search::-webkit-input-placeholder {
    color: #999;
    font-weight: normal;
 }
 
-.busiform-wrapper #busisearch:-moz-placeholder {
+.form-wrapper #search:-moz-placeholder {
     color: #999;
     font-weight: normal;
 }
 
-.busiform-wrapper #busisearch:-ms-input-placeholder {
+.form-wrapper #search:-ms-input-placeholder {
     color: #999;
     font-weight: normal;
 } 
 
-.busiform-wrapper #submit {
+.form-wrapper #submit {
     float: right;    
     border: 1px solid #00748f;
     height: 42px;
@@ -69,18 +69,18 @@ body {
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
 }
   
-.busiform-wrapper #submit:hover,
-.busiform-wrapper #submit:focus {       
+.form-wrapper #submit:hover,
+.form-wrapper #submit:focus {       
     background-color: #31b2c3;
     background-image: linear-gradient(top, #0483a0, #31b2c3);
 }   
   
-.busiform-wrapper #submit:active {
+.form-wrapper #submit:active {
     outline: 0;    
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;    
 }
   
-.busiform-wrapper #submit::-moz-focus-inner {
+.form-wrapper #submit::-moz-focus-inner {
     border: 0;
 }
 
