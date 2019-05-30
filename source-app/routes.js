@@ -17,19 +17,19 @@ module.exports = function(app) {
 		tuna.transit_form(req, res);
 	});
 	app.post('/re_form', function(req, res) {
-		var function_name = 'addProInfo'
+		var function_name = 'addExpressInfo'
 		tuna.re_form(req, res, function_name);
 	});
 	app.post('/re_transit_form', function(req, res) {
-		var function_name = 'addLogInfo'
+		var function_name = 'addTransferInfo'
 		tuna.re_form(req, res, function_name);
 	});
 	app.get('/source/:id', function(req, res) {
-		var function_name = 'getProInfo'
+		var function_name = 'getExpressInfo'
 		tuna.get_tuna(req, res, function_name);
 	});
 	app.get('/transit/:id', function(req, res) {
-		var function_name = 'getLogInfo'
+		var function_name = 'getTransferInfo'
 		tuna.get_tuna(req, res, function_name);
 	});
 }
