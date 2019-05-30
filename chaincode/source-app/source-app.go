@@ -9,14 +9,28 @@ import (
     "github.com/hyperledger/fabric/core/chaincode/shim"
     pb "github.com/hyperledger/fabric/protos/peer"
 )
+
+/* 
+Function annotation:
+1. json
+    1.1 func Marshal(v interface{}) ([]byte, error)
+        Marshal returns the JSON encoding of v.
+    1.2 func Unmarshal(data []byte, v interface{}) error
+        Unmarshal parses the JSON-encoded data and stores the result in the value pointed to by v. If v is nil or not a pointer, Unmarshal returns an InvalidUnmarshalError.
+2. shim
+    2.1 func PutState(key string, value []byte) error
+        func PutState puts the specified `key` and `value` into the transaction's writeset as a data-write proposal. PutState doesn't effect the ledger until the transaction is validated and successfully committed. Simple keys must not be an empty string and must not start with null character (0x00), in order to avoid range query collisions with composite keys, which internally get prefixed with 0x00 as composite key namespace.
+    2.2 GetHistoryForKey(key string) (HistoryQueryIteratorInterface, error)
+        GetHistoryForKey returns a history of key values across time. For each historic key update, the historic value and associated transaction id and timestamp are returned. The timestamp is the timestamp provided by the client in the proposal header. GetHistoryForKey requires peer configuration core.ledger.history.enableHistoryDatabase to be true. The query is NOT re-executed during validation phase, phantom reads are not detected. That is, other committed transactions may have updated the key concurrently, impacting the result set, and this would not be detected at validation/commit time. Applications susceptible to this should therefore not use GetHistoryForKey as part of transactions that update ledger, and should limit use to read-only chaincode operations.
+*/
 type ExpressChainCode struct{
 }
 
-//express数据结构体
+//快递
 type ExpressInfo struct{
     ExpressID string `json:ExpressID`                             //快递ID
     ExpressProInfo ProInfo `json:ExpressProInfo`                  //快递信息
-    ExpressLogInfo LogInfo `json:ExpressLogInfo`                  //物流信息
+    ExpressLogInfo LogInfo `json:ExpressLogInfo`                  //中转信息
 }
 
 
@@ -33,7 +47,7 @@ type ProInfo struct{
     DelivererAdd string `json:DelivererAdd`                  //投件人所在地
 }
 
-
+//中转信息
 type LogInfo struct{
     ArrTime string `json:ArrTime`                       //到达时间
     TranferStationAdd string `json:TranferStationAdd`   //中转站地址
@@ -46,11 +60,11 @@ type LogInfo struct{
     VehicleInfo string `json:VehicleInfo`               //交通工具信息
     DriverInfo string `json:DriverInfo`                 //司机信息
 }
-
+//初始化
 func (a *ExpressChainCode) Init(stub shim.ChaincodeStubInterface) pb.Response {
     return shim.Success(nil)
 }
-
+//提供给外部的调用
 func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
     fn,args := stub.GetFunctionAndParameters()
     if fn == "addProInfo"{
@@ -65,7 +79,7 @@ func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 
     return shim.Error("Recevied unkown function invocation")
 }
-
+//添加快递信息
 func (a *ExpressChainCode) addProInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
     var err error 
     var ExpressInfos ExpressInfo
@@ -88,7 +102,7 @@ func (a *ExpressChainCode) addProInfo(stub shim.ChaincodeStubInterface, args []s
     ExpressInfos.ExpressProInfo.Price = args[7]
     ExpressInfos.ExpressProInfo.Deliverer = args[8]
     ExpressInfos.ExpressProInfo.DelivererAdd = args[9]
-    ProInfosJSONasBytes,err := json.Marshal(ExpressInfos)
+    ProInfosJSONasBytes,err := json.Marshal(ExpressInfos)//将快递信息转为JSON格式
     if err != nil{
         return shim.Error(err.Error())
     }
@@ -101,7 +115,7 @@ func (a *ExpressChainCode) addProInfo(stub shim.ChaincodeStubInterface, args []s
     return shim.Success(nil)
 }
 
-
+//添加中转信息
 func(a *ExpressChainCode) addLogInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
  
     var err error
@@ -138,7 +152,7 @@ func(a *ExpressChainCode) addLogInfo (stub shim.ChaincodeStubInterface,args []st
 
 
 
-
+//获取快递信息
 func(a *ExpressChainCode) getProInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
     
     if len(args) != 1{
@@ -172,7 +186,7 @@ func(a *ExpressChainCode) getProInfo (stub shim.ChaincodeStubInterface,args []st
     return shim.Success(jsonsAsBytes)
 }
 
-
+//获取中转信息
 func(a *ExpressChainCode) getLogInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
 
     var LogInfos []LogInfo

@@ -22,18 +22,6 @@ app.controller('appController', function($scope, appFactory){
 			}
 		});
 	}
-	$scope.queryPart = function(){
-		var id = $scope.query_id;
-		appFactory.queryPart(id, function(data){
-			$scope.part_source = data;
-			if ($scope.query_tuna == "Could not locate tuna"){
-				console.log()
-				$("#error_query").show();
-			} else{
-				$("#error_query").hide();
-			}
-		});
-	}
 	$scope.queryTransit = function(){
 		var id = $scope.query_id;
 		appFactory.queryTransit(id, function(data){
@@ -52,11 +40,6 @@ app.factory('appFactory', function($http){
 	var factory = {};
 	factory.querySource = function(id, callback){
     	$http.get('/source/'+id).success(function(output){
-			callback(output)
-		});
-	}
-	factory.queryPart = function(id, callback){
-    	$http.get('/part/'+id).success(function(output){
 			callback(output)
 		});
 	}
