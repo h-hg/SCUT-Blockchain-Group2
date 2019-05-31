@@ -16,17 +16,11 @@ return{
 	search_html: function(req, res) {
 		res.render('search')
 	},
-	part_search: function(req, res) {
-		res.render('part_search')
-	},
 	business_search: function(req, res) {
 		res.render('business_search')
 	},
 	form_: function(req, res) {
 		res.render('form')
-	},
-	part_form: function(req, res) {
-		res.render('part_form')
 	},
 	transit_form: function(req, res) {
 		res.render('transit_form')

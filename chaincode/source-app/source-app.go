@@ -9,109 +9,95 @@ import (
     "github.com/hyperledger/fabric/core/chaincode/shim"
     pb "github.com/hyperledger/fabric/protos/peer"
 )
-type FoodChainCode struct{	
+
+/* 
+Function annotation:
+1. json
+    1.1 func Marshal(v interface{}) ([]byte, error)
+        Marshal returns the JSON encoding of v.
+    1.2 func Unmarshal(data []byte, v interface{}) error
+        Unmarshal parses the JSON-encoded data and stores the result in the value pointed to by v. If v is nil or not a pointer, Unmarshal returns an InvalidUnmarshalError.
+2. shim
+    2.1 func PutState(key string, value []byte) error
+        func PutState puts the specified `key` and `value` into the transaction's writeset as a data-write proposal. PutState doesn't effect the ledger until the transaction is validated and successfully committed. Simple keys must not be an empty string and must not start with null character (0x00), in order to avoid range query collisions with composite keys, which internally get prefixed with 0x00 as composite key namespace.
+    2.2 GetHistoryForKey(key string) (HistoryQueryIteratorInterface, error)
+        GetHistoryForKey returns a history of key values across time. For each historic key update, the historic value and associated transaction id and timestamp are returned. The timestamp is the timestamp provided by the client in the proposal header. GetHistoryForKey requires peer configuration core.ledger.history.enableHistoryDatabase to be true. The query is NOT re-executed during validation phase, phantom reads are not detected. That is, other committed transactions may have updated the key concurrently, impacting the result set, and this would not be detected at validation/commit time. Applications susceptible to this should therefore not use GetHistoryForKey as part of transactions that update ledger, and should limit use to read-only chaincode operations.
+*/
+type ExpressChainCode struct{
 }
 
-//food数据结构体
-type FoodInfo struct{
-    FoodID string `json:FoodID`                             //食品ID
-    FoodProInfo ProInfo `json:FoodProInfo`                  //生产信息
-    FoodIngInfo []IngInfo `json:FoodIngInfo`                  //配料信息
-    FoodLogInfo LogInfo `json:FoodLogInfo`                  //物流信息
+//快递信息
+type ExpressInfo struct{
+    CoName string `json:CoName`                              //物流公司名称
+    CoInfo string `json:CoInfo`                              //物流公司信息
+    DeliverTime string `json:DeliverTime`                    //发件日期
+    EstimatedDeliveryTime string `json:EstimatedDeliveryTime`//预计配送时间
+    BatchNum string `json:BatchNum`                          //快递批次号
+    Weight string `json:Weight`                              //快递重量
+    Price string `json:Price`                                //快递费用
+    Deliverer string `json:Deliverer`                        //投件人
+    DelivererAdd string `json:DelivererAdd`                  //投件人所在地
 }
 
-type FoodAllInfo struct{
-    FoodID string `json:FoodId`
-    FoodProInfo ProInfo `json:FoodProInfo`
-    FoodIngInfo []IngInfo `json:FoodIngInfo`
-    FoodLogInfo []LogInfo `json:FoodLogInfo`
+//中转信息
+type TransferInfo struct{
+    ArrTime string `json:ArrTime`                       //到达时间
+    TranferStationAdd string `json:TranferStationAdd`   //中转站地址
+    HandlerInfo string `json:HandlerInfo`               //处理人员信息
+    PkgStatus string `json:PkgStatus`                   //快递包状态
+    DepartureTime string `json:DepartureTime`           //出发时间
+    NextDestAdd string `json:NextDestAdd`               //下一个站点地址
+    Mission string `json:Mission`                       //转运/派送
+    VehicleType string `json:VehicleType`               //运送方式
+    VehicleInfo string `json:VehicleInfo`               //交通工具信息
+    DriverInfo string `json:DriverInfo`                 //司机信息
 }
-
-//生产信息
-type ProInfo struct{
-    FoodName string `json:FoodName`                         //食品名称
-    FoodSpec string `json:FoodSpec`                         //食品规格
-    FoodMFGDate string `json:FoodMFGDate`                   //食品出产日期
-    FoodEXPDate string `json:FoodEXPDate`                   //食品保质期
-    FoodLOT string `json:FoodLOT`                           //食品批次号
-    FoodQSID string `json:FoodQSID`                         //食品生产许可证编号
-    FoodMFRSName string `json:FoodMFRSName`                 //食品生产商名称
-    FoodProPrice string `json:FoodProPrice`                 //食品生产价格
-    FoodProPlace string `json:FoodProPlace`                 //食品生产所在地
-}
-type IngInfo struct{
-    IngID string `json:IngID`                               //配料ID
-    IngName string `json:IngName`                           //配料名称
-}
-
-type LogInfo struct{
-    LogDepartureTm string `json:LogDepartureTm`             //出发时间
-    LogArrivalTm string `json:LogArrivalTm`                 //到达时间
-    LogMission string `json:LogMission`                     //处理业务(储存or运输)
-    LogDeparturePl string `json:LogDeparturePl`             //出发地
-    LogDest string `json:LogDest`                           //目的地
-    LogToSeller string `json:LogToSeller`                   //销售商
-    LogStorageTm string `json:LogStorageTm`                 //存储时间
-    LogMOT string `json:LogMOT`                             //运送方式
-    LogCopName string `json:LogCopName`                     //物流公司名称
-    LogCost string `json:LogCost`                           //费用
-}
-
-func (a *FoodChainCode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+//初始化
+func (a *ExpressChainCode) Init(stub shim.ChaincodeStubInterface) pb.Response {
     return shim.Success(nil)
 }
-
-func (a *FoodChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
+//提供给外部的调用
+func (a *ExpressChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
     fn,args := stub.GetFunctionAndParameters()
-    if fn == "addProInfo"{
-        return a.addProInfo(stub,args)
-    } else if fn == "addIngInfo"{
-        return a.addIngInfo(stub,args)
-    } else if fn == "getFoodInfo"{
-        return a.getFoodInfo(stub,args)
-    }else if fn == "addLogInfo"{
-        return a.addLogInfo(stub,args)
-    }else if fn == "getProInfo"{
-        return a.getProInfo(stub,args)
-    }else if fn == "getLogInfo"{
-        return a.getLogInfo(stub,args)
-    }else if fn == "getIngInfo"{
-        return a.getIngInfo(stub,args)
-    }else if fn == "getLogInfo_l"{
-        return a.getLogInfo_l(stub,args)
+    if fn == "addExpressInfo"{
+        return a.addExpressInfo(stub,args)
+    }else if fn == "addTransferInfo"{
+        return a.addTransferInfo(stub,args)
+    }else if fn == "getExpressInfo"{
+        return a.getExpressInfo(stub,args)
+    }else if fn == "getTransferInfo"{
+        return a.getTransferInfo(stub,args)
     }
 
     return shim.Error("Recevied unkown function invocation")
 }
-
-func (a *FoodChainCode) addProInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-    var err error 
-    var FoodInfos FoodInfo
-
+//添加快递信息
+func (a *ExpressChainCode) addExpressInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
     if len(args)!=10{
         return shim.Error("Incorrect number of arguments.")
     }
-    FoodInfos.FoodID = args[0]
-    if FoodInfos.FoodID == ""{
-        return shim.Error("FoodID can not be empty.")
+    ExpressID := args[0]
+    if ExpressID == ""{
+        return shim.Error("ExpressID can not be empty.")
     }
     
-    
-    FoodInfos.FoodProInfo.FoodName = args[1]
-    FoodInfos.FoodProInfo.FoodSpec = args[2]
-    FoodInfos.FoodProInfo.FoodMFGDate = args[3]
-    FoodInfos.FoodProInfo.FoodEXPDate = args[4]
-    FoodInfos.FoodProInfo.FoodLOT = args[5]
-    FoodInfos.FoodProInfo.FoodQSID = args[6]
-    FoodInfos.FoodProInfo.FoodMFRSName = args[7]
-    FoodInfos.FoodProInfo.FoodProPrice = args[8]
-    FoodInfos.FoodProInfo.FoodProPlace = args[9]
-    ProInfosJSONasBytes,err := json.Marshal(FoodInfos)
+    var expressInfos ExpressInfo
+    expressInfos.CoName = args[1]
+    expressInfos.CoInfo = args[2]
+    expressInfos.DeliverTime = args[3]
+    expressInfos.EstimatedDeliveryTime = args[4]
+    expressInfos.BatchNum = args[5]
+    expressInfos.Weight = args[6]
+    expressInfos.Price = args[7]
+    expressInfos.Deliverer = args[8]
+    expressInfos.DelivererAdd = args[9]
+    var err error 
+    ExpressInfoJSONasBytes,err := json.Marshal(expressInfos)//将快递信息转为JSON格式
     if err != nil{
         return shim.Error(err.Error())
     }
 
-    err = stub.PutState(FoodInfos.FoodID,ProInfosJSONasBytes)
+    err = stub.PutState(ExpressID,ExpressInfoJSONasBytes)
     if err != nil{
         return shim.Error(err.Error())
     }
@@ -119,252 +105,110 @@ func (a *FoodChainCode) addProInfo(stub shim.ChaincodeStubInterface, args []stri
     return shim.Success(nil)
 }
 
-func(a *FoodChainCode) addIngInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
-        
-    var FoodInfos FoodInfo
-    var IngInfoitem IngInfo
-
-    if  (len(args)-1)%2 != 0 || len(args) == 1{
-        return shim.Error("Incorrect number of arguments")
-    }
-
-    FoodID := args[0]
-    for i :=1;i < len(args);{   
-        IngInfoitem.IngID = args[i]
-        IngInfoitem.IngName = args[i+1]
-        FoodInfos.FoodIngInfo = append(FoodInfos.FoodIngInfo,IngInfoitem)
-        i = i+2
-    }
-    
-    
-    FoodInfos.FoodID = FoodID
-  /*  FoodInfos.FoodIngInfo = foodIngInfo*/
-    IngInfoJsonAsBytes,err := json.Marshal(FoodInfos)
-    if err != nil {
-    return shim.Error(err.Error())
-    }
-
-    err = stub.PutState(FoodInfos.FoodID,IngInfoJsonAsBytes)
-    if err != nil{
-        return shim.Error(err.Error())
-    }
-    return shim.Success(nil)
-        
-}
-
-func(a *FoodChainCode) addLogInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
- 
-    var err error
-    var FoodInfos FoodInfo
-
+//添加中转信息
+func(a *ExpressChainCode) addTransferInfo(stub shim.ChaincodeStubInterface,args []string) pb.Response{
     if len(args)!=11{
         return shim.Error("Incorrect number of arguments.")
     }
-    FoodInfos.FoodID = args[0]
-    if FoodInfos.FoodID == ""{
-        return shim.Error("FoodID can not be empty.")
+    ExpressID := args[0]
+    if ExpressID == ""{
+        return shim.Error("ExpressID can not be empty.")
     }
-    FoodInfos.FoodLogInfo.LogDepartureTm = args[1]
-    FoodInfos.FoodLogInfo.LogArrivalTm = args[2]
-    FoodInfos.FoodLogInfo.LogMission = args[3]
-    FoodInfos.FoodLogInfo.LogDeparturePl = args[4]
-    FoodInfos.FoodLogInfo.LogDest = args[5]
-    FoodInfos.FoodLogInfo.LogToSeller = args[6]
-    FoodInfos.FoodLogInfo.LogStorageTm = args[7]
-    FoodInfos.FoodLogInfo.LogMOT = args[8]
-    FoodInfos.FoodLogInfo.LogCopName = args[9]
-    FoodInfos.FoodLogInfo.LogCost = args[10]
+
+    var transferInfo TransferInfo
+    transferInfo.ArrTime = args[1]
+    transferInfo.TranferStationAdd = args[2]
+    transferInfo.HandlerInfo = args[3]
+    transferInfo.PkgStatus = args[4]
+    transferInfo.DepartureTime = args[5]
+    transferInfo.NextDestAdd = args[6]
+    transferInfo.Mission = args[7]
+    transferInfo.VehicleType = args[8]
+    transferInfo.VehicleInfo = args[9]
+    transferInfo.DriverInfo = args[10]
     
-    LogInfosJSONasBytes,err := json.Marshal(FoodInfos)
+    var err error
+    TransferInfoJSONasBytes,err := json.Marshal(transferInfo)
     if err != nil{
         return shim.Error(err.Error())
     } 
-    err = stub.PutState(FoodInfos.FoodID,LogInfosJSONasBytes)
+    err = stub.PutState(ExpressID,TransferInfoJSONasBytes)
     if err != nil{
         return shim.Error(err.Error())
     }
-    return shim.Success(nil)
+    return shim.Success(nil)ExpressInfos
 }
 
-
-
-func(a *FoodChainCode) getFoodInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
+//获取快递信息
+func(a *ExpressChainCode) getExpressInfo(stub shim.ChaincodeStubInterface,args []string) pb.Response{
+    
     if len(args) != 1{
         return shim.Error("Incorrect number of arguments.")
     }
-    FoodID := args[0]
-    resultsIterator,err := stub.GetHistoryForKey(FoodID)
+    ExpressID := args[0]
+    resultsIterator,err := stub.GetHistoryForKey(ExpressID)
     if err != nil {
         return shim.Error(err.Error())
     }
     defer resultsIterator.Close()
     
-    var foodAllinfo FoodAllInfo
+    var expressInfo ExpressInfo
 
     for resultsIterator.HasNext(){
-        var FoodInfos FoodInfo
-        response,err :=resultsIterator.Next()
-        if err != nil {
-             return shim.Error(err.Error())
-        }
-        json.Unmarshal(response.Value,&FoodInfos)
-        if FoodInfos.FoodProInfo.FoodName !=""{
-            foodAllinfo.FoodProInfo = FoodInfos.FoodProInfo
-        }else if FoodInfos.FoodIngInfo != nil{
-            foodAllinfo.FoodIngInfo = FoodInfos.FoodIngInfo
-        }else if FoodInfos.FoodLogInfo.LogMission !=""{
-            foodAllinfo.FoodLogInfo = append(foodAllinfo.FoodLogInfo,FoodInfos.FoodLogInfo)
-        }
-
-    }
-    
-    jsonsAsBytes,err := json.Marshal(foodAllinfo)
-    if err != nil{
-        return shim.Error(err.Error())
-    }
-
-    return shim.Success(jsonsAsBytes)
-}
- 
-
-func(a *FoodChainCode) getProInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
-    
-    if len(args) != 1{
-        return shim.Error("Incorrect number of arguments.")
-    }
-    FoodID := args[0]
-    resultsIterator,err := stub.GetHistoryForKey(FoodID)
-    if err != nil {
-        return shim.Error(err.Error())
-    }
-    defer resultsIterator.Close()
-    
-    var foodProInfo ProInfo
-
-    for resultsIterator.HasNext(){
-        var FoodInfos FoodInfo
+        var expressInfoGeted ExpressInfo
         response,err :=resultsIterator.Next()
         if err != nil {
             return shim.Error(err.Error())
         }
-        json.Unmarshal(response.Value,&FoodInfos)
-        if FoodInfos.FoodProInfo.FoodName != ""{
-            foodProInfo = FoodInfos.FoodProInfo
+        json.Unmarshal(response.Value,&expressInfoGeted)
+        if expressInfoGeted.CoName != ""{
+            expressInfo = expressInfoGeted
             continue
         }
     }
-    jsonsAsBytes,err := json.Marshal(foodProInfo)   
+    jsonsAsBytes,err := json.Marshal(expressInfo)   
     if err != nil {
         return shim.Error(err.Error())
     }
     return shim.Success(jsonsAsBytes)
 }
 
-func(a *FoodChainCode) getIngInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
- 
-    if len(args) !=1{
+//获取中转信息
+func(a *ExpressChainCode) getTransferInfo(stub shim.ChaincodeStubInterface,args []string) pb.Response{
+    if len(args) != 1{
         return shim.Error("Incorrect number of arguments.")
     }
-    FoodID := args[0]
-    resultsIterator,err := stub.GetHistoryForKey(FoodID)
-
+    
+    ExpressID := args[0]
+    resultsIterator,err :=stub.GetHistoryForKey(ExpressID)
     if err != nil{
         return shim.Error(err.Error())
     }
     defer resultsIterator.Close()
     
-    var foodIngInfo []IngInfo
+    
+    var transferInfos []TransferInfo
     for resultsIterator.HasNext(){
-        var FoodInfos FoodInfo
-        response,err := resultsIterator.Next()
-        if err != nil{
-            return shim.Error(err.Error())
-        }
-        json.Unmarshal(response.Value,&FoodInfos)
-        if FoodInfos.FoodIngInfo != nil{
-            foodIngInfo = FoodInfos.FoodIngInfo
-            continue
-        }
-    }
-    jsonsAsBytes,err := json.Marshal(foodIngInfo)
-    if err != nil{
-        return shim.Error(err.Error())
-    }
-    return shim.Success(jsonsAsBytes)
-}
-
-func(a *FoodChainCode) getLogInfo (stub shim.ChaincodeStubInterface,args []string) pb.Response{
-
-    var LogInfos []LogInfo
-
-    if len(args) != 1{
-        return shim.Error("Incorrect number of arguments.")
-    }
-
-    FoodID := args[0]
-    resultsIterator,err :=stub.GetHistoryForKey(FoodID)
-    if err != nil{
-        return shim.Error(err.Error())
-    }
-    defer resultsIterator.Close()
-
-   
-    for resultsIterator.HasNext(){
-        var FoodInfos FoodInfo
+        var ExpressInfos TransferInfo
         response,err := resultsIterator.Next()
         if err != nil {
             return shim.Error(err.Error())
         }
-        json.Unmarshal(response.Value,&FoodInfos)
-        if FoodInfos.FoodLogInfo.LogMission != ""{
-            LogInfos = append(LogInfos,FoodInfos.FoodLogInfo)
+        json.Unmarshal(response.Value,&ExpressInfos)
+        if ExpressInfos.HandlerInfo != ""{
+            transferInfos = append(transferInfos,ExpressInfos)
         }
     }
-    jsonsAsBytes,err := json.Marshal(LogInfos)
+    jsonsAsBytes,err := json.Marshal(transferInfos)
     if err != nil{
         return shim.Error(err.Error())
     }
     return shim.Success(jsonsAsBytes)
 }
-
-func(a *FoodChainCode) getLogInfo_l(stub shim.ChaincodeStubInterface,args []string) pb.Response{
-    var Loginfo LogInfo
-
-    if len(args) != 1{
-        return shim.Error("Incorrect number of arguments.")
-    }
-
-    FoodID := args[0]
-    resultsIterator,err :=stub.GetHistoryForKey(FoodID)
-    if err != nil{
-        return shim.Error(err.Error())
-    }
-    defer resultsIterator.Close()
-
-   
-    for resultsIterator.HasNext(){
-        var FoodInfos FoodInfo
-        response,err := resultsIterator.Next()
-        if err != nil {
-            return shim.Error(err.Error())
-        }
-        json.Unmarshal(response.Value,&FoodInfos)
-        if FoodInfos.FoodLogInfo.LogMission != ""{
-           Loginfo = FoodInfos.FoodLogInfo
-           continue 
-       }
-    }
-    jsonsAsBytes,err := json.Marshal(Loginfo)
-    if err != nil{
-        return shim.Error(err.Error ())
-    }
-    return shim.Success(jsonsAsBytes)
-}
-
 
 func main(){
-     err := shim.Start(new(FoodChainCode))
+     err := shim.Start(new(ExpressChainCode))
      if err != nil {
-         fmt.Printf("Error starting Food chaincode: %s ",err)
+         fmt.Printf("Error starting Express chaincode: %s ",err)
      }
 }

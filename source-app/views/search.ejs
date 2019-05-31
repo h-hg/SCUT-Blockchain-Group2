@@ -1,41 +1,86 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" type="text/css" href="css/detail.css" />
-		<link rel="stylesheet" type="text/css" href="css/search.css" />
-		<script src="https://ajax.lug.ustc.edu.cn/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-		<script src="https://ajax.lug.ustc.edu.cn/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
-	</head>
-	<body ng-app="application" ng-controller="appController">
-		<div class="form-wrapper">
-			<input type="text" id="search" placeholder="食品编号..." ng-model="query_id" required>
-			<input type="submit" value="搜索" id="submit" ng-click="querySource()">
-		</div>
-		<table cellspacing="0" id="query_source">
-			<tr>
-				<th>食品名称</th>
-				<th>食品规格</th>
-				<th>食品生产日期</th>
-				<th>食品保质期</th>
-				<th>食品批次号</th>
-				<th>食品生产许可证编号</th>
-				<th>食品生产商名称</th>
-				<th>食品生产价格</th>
-				<th>食品生产所在地</th>
-			</tr>
-			<tr>
-          			<td>{{query_source.FoodName}}</td>
-          			<td>{{query_source.FoodSpec}}</td>
-          			<td>{{query_source.FoodMFGDate}}</td>
-          			<td>{{query_source.FoodEXPDate}}</td>
-		  		<td>{{query_source.FoodLOT}}</td>
-		  		<td>{{query_source.FoodQSID}}</td>
-		  		<td>{{query_source.FoodMFRSName}}</td>
-		  		<td>{{query_source.FoodProPrice}}</td>
-		  		<td>{{query_source.FoodProPlace}}</td>
-        		</tr>
-		</table>
-	</body>
-	<script type="text/javascript" src="/js/app.js"> </script>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>快递查询</title>
+	<link rel="icon" sizes="any" href="./images/scut.jpg">
+	<link href="./css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="./css/detail.css" />
+	<link rel="stylesheet" type="text/css" href="./css/search.css" />
+	<script src="https://ajax.lug.ustc.edu.cn/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="https://ajax.lug.ustc.edu.cn/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+</head>
+
+<body ng-app="application" ng-controller="appController">
+		<nav class="navbar navbar-default navbar-fixed-top">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header page-scroll">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="/">快递溯源</a>
+					</div>
+					
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav navbar-right">
+							<li class="hidden">
+								<a href="#page-top"></a>
+							</li>
+							<li class="page-scroll">
+								<a href="/form">发布快递</a>
+							</li>
+							<li class="page-scroll">
+								<a href="/search">查询快递</a>
+							</li>
+							<li class="page-scroll">
+								<a href="/transit_form">添加中转</a>
+							</li>
+							<li class="page-scroll">
+								<a href="/business_search">查询中转</a>
+							</li>
+						</ul>
+					</div>
+					<!-- /.navbar-collapse -->
+				</div>
+				<!-- /.container-fluid -->
+			</nav>
+			
+	<div class="form-wrapper">
+		<input type="text" id="search" placeholder="快递编号..." ng-model="query_id" required>
+		<input type="button" class="submitButton" style="margin-left: 2%" value="返回" onclick="javascrtpt:window.location.href='/'">
+		<input type="submit" value="搜索" id="submit" ng-click="querySource()">
+	</div>
+	<table cellspacing="0" id="query_source">
+		<tr>
+			<th>物流公司名称</th>
+			<th>物流公司信息</th>
+			<th>发件日期</th>
+			<th>预计配送时间</th>
+			<th>快递批次号</th>
+			<th>快递重量</th>
+			<th>快递费用</th>
+			<th>投件人</th>
+			<th>投件人所在地</th>
+		</tr>
+		<tr>
+			<td>{{query_source.CoName}}</td>
+			<td>{{query_source.CoInfo}}</td>
+			<td>{{query_source.DeliverTime}}</td>
+			<td>{{query_source.EstimatedDeliveryTime}}</td>
+			<td>{{query_source.BatchNum}}</td>
+			<td>{{query_source.Weight}}</td>
+			<td>{{query_source.Price}}</td>
+			<td>{{query_source.Deliverer}}</td>
+			<td>{{query_source.DelivererAdd}}</td>
+		</tr>
+	</table>
+</body>
+<script type="text/javascript" src="./js/app.js"> </script>
+
 </html>

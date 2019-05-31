@@ -1,36 +1,215 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="/css/index.css" />
-</head>
-<% if (messages.success) { %>
-	<div class="flash flash-success"><%= messages.success %></div>
-<% } %>
-<div class="hand">
-	<div class = "card suitdiamonds" onclick="window.location='/search';">
-		<img src="/images/user-food.jpg" class="image-icon">
-		<p>食品查询</p>
-	</div>
-	<div class = "card suitdiamonds" onclick="window.location='/part_search';">
-		<img src="/images/part_of_food.jpg" class="image-icon">
-		<p>配料查询</p>
-	</div>
-	<div class = "card suitdiamonds" onclick="window.location='/business_search';">
-		<img src="/images/business.png" class="image-icon">
-		<p>中转查询</p>
-	</div>
-	<div class = "card suitdiamonds" onclick="window.location='/form';">
-		<img src="/images/submit.png" class="image-icon">
-		<p>发布商品</p>
-	</div>
-	<div class = "card suitdiamonds" onclick="window.location='/part_form';">
-		<img src="/images/batching.jpg" class="image-icon">
-		<p>添加配料</p>
-	</div>
-	<div class = "card suitdiamonds" onclick="window.location='/transit_form';">
-		<img src="/images/transit.png" class="image-icon">
-		<p>中转商品</p>
-	</div>
-</div>
-</html>
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="deluxer">
+    <link rel="icon" sizes="any" href="./images/scut.jpg">
+
+    <title>Welcome</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./ct/bootstrap.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="./ct/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="./ct/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom styles for this template -->
+    <link href="./ct/carousel.css" rel="stylesheet">
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    <div class="navbar-wrapper">
+      <div class="container">
+
+        <nav class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="/">快递溯源</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav navbar-right">
+               <!--  <li class="active"><a href="./index.html">Home</a></li> -->
+                <li class="page-scroll">
+                    <a href="#ktc1">发布快递</a>
+                  </li>
+                  <li class="page-scroll">
+                    <a href="#ktc2">查询快递</a>
+                  </li>
+                  <li class="page-scroll">
+                    <a href="#ktc3">添加中转</a>
+                  </li>
+                  <li class="page-scroll">
+                    <a href="#ktc4">查询中转</a>
+                  </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+      </div>
+    </div>
+
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class=""></li>
+        <li data-target="#myCarousel" data-slide-to="1" class=""></li>
+        <li data-target="#myCarousel" data-slide-to="2" class="active"></li>
+      </ol>
+      <div class="carousel-inner" role="listbox">
+        <div class="item">
+          <img class="first-slide" src="./images/1.jpg" alt="First slide" width=""> 
+          <div class="container">
+            <div class="carousel-caption">
+              <h2>信息完整</h2>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img class="second-slide" src="./images/2.jpg" alt="Second slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h2>渠道丰富</h2>
+            </div>
+          </div>
+        </div>
+        <div class="item active">
+          <img class="third-slide" src="./images/3.jpg" alt="Third slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h2>优秀服务</h2>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div><!-- /.carousel -->
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+  <% if (messages.success) { %>
+    <div class="flash flash-success"><%= messages.success %></div>
+    <% } %>
+
+    <div class="container marketing">
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette" id="ktc1">
+        <div class="col-md-7"  onclick="window.location='/form';">
+          <a href="/form"><h2 class="featurette-heading">发布快递</h2></a>
+          <p class="lead">春江潮水连海平，海上明月共潮生。<br/>
+              滟滟随波千万里，何处春江无月明！<br/>
+              江流宛转绕芳甸，月照花林皆似霰。<br/>
+              空里流霜不觉飞，汀上白沙看不见。 <br/>
+          </p>
+        </div>
+        <div class="col-md-5">
+          <a href="/form"><img class="featurette-image img-responsive center-block" alt="500x500" src="./images/g2.jpg"></a>
+        </div>
+      </div>
+
+      <hr class="featurette-divider" id="ktc2">
+
+      <div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <a href="/search"><h2 class="featurette-heading">查询快递</h2></a>
+          <p class="lead">江天一色无纤尘，皎皎空中孤月轮。<br/>
+              江畔何人初见月？江月何年初照人？<br/>
+              人生代代无穷已，江月年年只相似。<br/>
+              不知江月待何人，但见长江送流水。<br/>
+          </p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <a href="/search"><img class="featurette-image img-responsive center-block"  alt="500x500" src="./images/g5.jpg" data-holder-rendered="true"></a>
+        </div>
+      </div>
+
+      <hr class="featurette-divider" id="ktc3">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <a href="/transit_form"><h1 class="featurette-heading">添加中转</h1></a>
+          <p class="lead">白云一片去悠悠，青枫浦上不胜愁。<br/>
+              谁家今夜扁舟子？何处相思明月楼？<br/>
+              可怜楼上月徘徊，应照离人妆镜台。<br/>
+              玉户帘中卷不去，捣衣砧上拂还来。<br/>
+            </p>
+        </div>
+        <div class="col-md-5">
+          <a href="/transit_form"><img class="featurette-image img-responsive center-block" alt="500x500" src="./images/g4.jpg" data-holder-rendered="true"></a>
+        </div>
+      </div>
+
+      <hr class="featurette-divider" id="ktc4">
+
+      <div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <a href="/business_search"><h1 class="featurette-heading">查询中转</h1></a>
+          <p class="lead">白云一片去悠悠，青枫浦上不胜愁。<br/>
+              谁家今夜扁舟子？何处相思明月楼？<br/>
+              可怜楼上月徘徊，应照离人妆镜台。<br/>
+              玉户帘中卷不去，捣衣砧上拂还来。<br/>
+          </p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <a href="/business_search"><img class="featurette-image img-responsive center-block"  alt="500x500" src="./images/g3.jpg" data-holder-rendered="true"></a>
+        </div>
+      </div>
+
+      <!-- /END THE FEATURETTES -->
+
+      <br/>
+      <br/>
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>©Bootstrap 区块链技术小组<a href="#"></a> · <a href="#">power by deluxer</a></p>
+
+    </footer></div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./ct/jquery.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="./ct/bootstrap.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="./ct/holder.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./ct/ie10-viewport-bug-workaround.js"></script>
+  
+
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500" preserveAspectRatio="none" style="display: none; visibility: hidden; position: absolute; top: -100%; left: -100%;"><defs><style type="text/css"></style></defs><text x="0" y="25" style="font-weight:bold;font-size:25pt;font-family:Arial, Helvetica, Open Sans, sans-serif">500x500</text></svg></body></html>
